@@ -8,7 +8,6 @@ module.exports =
   provider: null
 
   activate: (state) ->
-    console.log "Activated"
 
   deactivate: ->
     @provider = null
