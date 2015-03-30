@@ -5,7 +5,7 @@
   "description": "A python Autocomplete Plus provider based on Jedi",
   "activationCommands": {
   },
-  "repository": "https://github.com/atom/acp-python-jedi",
+  "repository": "https://github.com/tinloaf/autocomplete-plus-python-jedi",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
