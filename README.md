@@ -8,7 +8,7 @@ Either use Atoms package manager or `apm install autocomplete-plus-python-jedi`
 
 ## Changelog
 
-This package was inspired by a very similar package by [fallenhikitori](https://github.com/fallenhitokiri/autocomplete-plus-jedi).
+This package was inspired by a very similar package by [fallenhitokiri](https://github.com/fallenhitokiri/autocomplete-plus-jedi).
 
 2015-03-30 	v. 0.1.0
 * Initial version. Autocompletion working.
