@@ -81,11 +81,40 @@ class JediProvider
 		suggestions = []
 		for suggestionData in data['suggestions']
 			wholeText = prefix + suggestionData['complete']
-			suggestions.push({
-				text : wholeText,
+
+			# TODO watch this
+			if atom.config.get('autocomplete-plus-python-jedi.completeArguments') and suggestionData['params']? and suggestionData['params'].length > 0
+				useSnippet = true
+				snippet = wholeText + "("
+
+				i = 1
+				for param in suggestionData['params']
+					if i != 1
+						snippet += ", "
+
+					if param['description'].split('=').length == 1
+						snippet += "${" + i + ":" + param['description'] + '}'
+					else
+						arg_name = $.trim(param['description'].split('=')[0])
+						arg = $.trim(param['description'].split('=')[1])
+						snippet += arg_name + " = ${" + i + ":" + arg + '}'
+
+					i += 1
+
+				snippet += ")"
+			else
+				useSnippet = false
+
+			suggestion = {
 				rightLabel: suggestionData['description'],
-				#className: @mapClass suggestionData['type']
-			})
+			}
+
+			if useSnippet
+				suggestion.snippet = snippet
+			else
+				suggestion.text = wholeText
+
+			suggestions.push(suggestion)
 
 		delete @cbs[reqId]
 

@@ -5,6 +5,13 @@ spawn = require('child_process').spawn
 JediProvider = require('./jedi-provider')
 
 module.exports =
+  config:
+    completeArguments:
+      type: 'boolean'
+      default: true
+      title: "Complete Arguments for Functions"
+      description: "This will cause the suggestions for functions to include their arguments."
+
   provider: null
 
   activate: (state) ->

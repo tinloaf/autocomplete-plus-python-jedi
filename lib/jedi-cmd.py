@@ -4,7 +4,6 @@ import time
 import inspect
 import os
 
-
 JEDI_IMPORT_FAILED=False
 
 try:
@@ -24,6 +23,21 @@ class JediCmdline(object):
 		self.istream = istream
 		self.ostream =  ostream
 
+	def _get_params(self, completion):
+		try:
+			param_defs = completion.params
+		except AttributeError:
+			return []
+
+		params = []
+		for param_def in param_defs:
+			params.append({
+				'name': param_def.name,
+				'description': param_def.description
+			})
+
+		return params
+
 	def _process_line(self, line):
 		data =  json.loads(line)
 		script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
@@ -31,11 +45,14 @@ class JediCmdline(object):
 
 		retData = []
 		for completion in completions:
+			params = self._get_params(completion)
+
 			retData.append({
 				'name': completion.name,
 				'complete': completion.complete,
 				'description': completion.description,
-				'type': completion.type
+				'type': completion.type,
+				'params': params
 			})
 
 		self._write_response(retData, data)
