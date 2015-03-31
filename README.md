@@ -4,7 +4,10 @@
 
 Either use Atoms package manager or `apm install autocomplete-plus-python-jedi`
 
-**Important**: Make sure you have the jedi package installed in the python path from where you start Atom. If you want to develop inside a virtualenv, activate that virtualenv, make sure jedi is installed (or install it via `pip install jedi`) and start atom from the command line.
+## Features
+
+* Autocompletion from Jedi
+* Comes with bundled Jedi - no need for jedi in your pythonpath
 
 ## Changelog
 
@@ -12,3 +15,6 @@ This package was inspired by a very similar package by [fallenhitokiri](https://
 
 2015-03-30 	v. 0.1.0
 * Initial version. Autocompletion working.
+
+2015-03-31 	v. 0.1.1
+* Add bundled Jedi
