@@ -56,7 +56,6 @@ class JediCmdline(object):
 				'docstring': completion.docstring()
 			})
 
-
 		self._write_response(retData, data)
 
 	def _write_response(self, retData, data):

@@ -16,6 +16,11 @@ Either use Atoms package manager or `apm install autocomplete-plus-python-jedi`
 
 This package was inspired by a very similar package by [fallenhitokiri](https://github.com/fallenhitokiri/autocomplete-plus-jedi).
 
+2015-04-02	v. 0.2.1 - v.0.2.3
+* Bugfix: Arguments with unknown names now called "arg"
+* Improve behavior if ACP is not installed
+* Prepare docstrings for when ACP implements this
+
 2015-03-31 	v. 0.2.0
 * Add function arguments to suggestions
 

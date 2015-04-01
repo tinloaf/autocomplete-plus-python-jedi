@@ -1,3 +1,8 @@
+## 0.2.1 - 0.2.3
+* Bugfix: Arguments with unknown names now called "arg"
+* Improve behavior if ACP is not installed
+* Prepare docstrings for when ACP implements this
+
 ## 0.2.0
 * Add function arguments to suggestions
 

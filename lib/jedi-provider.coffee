@@ -95,8 +95,10 @@ class JediProvider
 					if i != 1
 						snippet += ", "
 
+					description = if param["description"].length > 0 then param["description"] else "arg"
+
 					if param['description'].split('=').length == 1
-						snippet += "${" + i + ":" + param['description'] + '}'
+						snippet += "${" + i + ":" + description + '}'
 					else
 						arg_name = $.trim(param['description'].split('=')[0])
 						arg = $.trim(param['description'].split('=')[1])
