@@ -52,8 +52,10 @@ class JediCmdline(object):
 				'complete': completion.complete,
 				'description': completion.description,
 				'type': completion.type,
-				'params': params
+				'params': params,
+				'docstring': completion.docstring()
 			})
+
 
 		self._write_response(retData, data)
 

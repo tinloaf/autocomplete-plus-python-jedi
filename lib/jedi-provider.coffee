@@ -110,6 +110,7 @@ class JediProvider
 
 			suggestion = {
 				rightLabel: suggestionData['description'],
+				description: suggestionData['docstring']
 			}
 
 			if useSnippet
