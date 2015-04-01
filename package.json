@@ -16,5 +16,11 @@
         "2.0.0": "provide"
       }
     }
-  }
+  },
+  "keywords": [
+    "python",
+    "autocomplete-plus",
+    "autocomplete",
+    "jedi"
+  ]
 }
