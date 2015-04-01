@@ -21,7 +21,7 @@ except ImportError:
 class JediCmdline(object):
 	def __init__(self, istream, ostream):
 		self.istream = istream
-		self.ostream =  ostream
+		self.ostream = ostream
 
 	def _get_params(self, completion):
 		try:
