@@ -8,8 +8,8 @@ class JediProvider
 	selector: '.source.python'
 	providerblacklist: null
 
-  inclusionPriority: 10
-  excludeLowerPriority: true
+	inclusionPriority: 10
+	excludeLowerPriority: true
 
 	mapClass: (typeName) ->
 		switch typeName
