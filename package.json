@@ -9,7 +9,12 @@
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "atom-package-dependencies": "latest"
+  },
+  "package-dependencies": {
+    "autocomplete-plus": "latest"
+  },
   "providedServices": {
     "autocomplete.provider": {
       "versions": {

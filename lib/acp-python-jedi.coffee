@@ -4,6 +4,9 @@
 spawn = require('child_process').spawn
 JediProvider = require('./jedi-provider')
 
+apd = require('atom-package-dependencies');
+apd.install();
+
 module.exports =
   config:
     completeArguments:
