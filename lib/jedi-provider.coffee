@@ -8,6 +8,9 @@ class JediProvider
 	selector: '.source.python'
 	providerblacklist: null
 
+  inclusionPriority: 10
+  excludeLowerPriority: true
+
 	mapClass: (typeName) ->
 		switch typeName
 			when "function" then "entity name function"
