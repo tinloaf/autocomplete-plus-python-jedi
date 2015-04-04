@@ -21,6 +21,13 @@
       }
     }
   },
+  "contributors": [
+    {"name": "Lukas Barth",
+    "email": "mail@tinloaf.de"}
+  ],
+  "bugs": {
+    "url": https://github.com/tinloaf/autocomplete-plus-python-jedi/issues"
+  },
   "keywords": [
     "python",
     "autocomplete-plus",
