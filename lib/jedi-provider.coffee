@@ -13,7 +13,12 @@ class JediProvider
 
 	mapClass: (typeName) ->
 		switch typeName
-			when "function" then "entity name function"
+			when "function" then "function"
+			when "module" then "import"
+			when "class" then "class"
+			when "instance" then "variable"
+			when "statement" then "value"
+			when "keyword" then "keyword"
 			else ""
 
 	handleProcessError: ->
@@ -112,7 +117,8 @@ class JediProvider
 
 			suggestion = {
 				rightLabel: suggestionData['description'],
-				description: suggestionData['docstring']
+				description: suggestionData['docstring'],
+				type: @mapClass suggestionData['type']
 			}
 
 			if useSnippet
