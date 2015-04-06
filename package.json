@@ -1,7 +1,7 @@
 {
   "name": "autocomplete-plus-python-jedi",
   "main": "./lib/acp-python-jedi",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A python Autocomplete Plus provider based on Jedi",
   "activationCommands": {},
   "repository": "https://github.com/tinloaf/autocomplete-plus-python-jedi",
@@ -22,8 +22,10 @@
     }
   },
   "contributors": [
-    {"name": "Lukas Barth",
-    "email": "mail@tinloaf.de"}
+    {
+      "name": "Lukas Barth",
+      "email": "mail@tinloaf.de"
+    }
   ],
   "bugs": {
     "url": "https://github.com/tinloaf/autocomplete-plus-python-jedi/issues"
