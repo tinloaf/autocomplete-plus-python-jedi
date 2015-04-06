@@ -3,6 +3,7 @@ import json
 import time
 import inspect
 import os
+import re
 
 JEDI_IMPORT_FAILED=False
 
@@ -22,6 +23,7 @@ class JediCmdline(object):
 	def __init__(self, istream, ostream):
 		self.istream = istream
 		self.ostream = ostream
+		self.ret_val_re = re.compile(r'-> (?P<retval>.*)$')
 
 	def _get_params(self, completion):
 		try:
@@ -38,6 +40,14 @@ class JediCmdline(object):
 
 		return params
 
+	def _get_return_val(self, docstr):
+		first_line = docstr.split('\n')[0]
+		match = self.ret_val_re.search(first_line)
+		if (match is not None) and 'retval' in match.groupdict():
+			return match.groupdict()['retval']
+		else:
+			return None
+
 	def _process_line(self, line):
 		data =  json.loads(line)
 		script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
@@ -53,7 +63,8 @@ class JediCmdline(object):
 				'description': completion.description,
 				'type': completion.type,
 				'params': params,
-				'docstring': completion.docstring()
+				'docstring': completion.docstring(),
+				'return_value': self._get_return_val(completion.docstring())
 			})
 
 		self._write_response(retData, data)

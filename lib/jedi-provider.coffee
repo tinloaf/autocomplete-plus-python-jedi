@@ -115,10 +115,13 @@ class JediProvider
 			else
 				useSnippet = false
 
+			console.log suggestionData
+
 			suggestion = {
 				rightLabel: suggestionData['description'],
 				description: suggestionData['docstring'],
-				type: @mapClass suggestionData['type']
+				type: @mapClass suggestionData['type'],
+				leftLabel: suggestionData['return_value']
 			}
 
 			if useSnippet
