@@ -4,9 +4,7 @@ spawn = require('child_process').spawn
 readline = require('readline')
 
 class JediProvider
-	id: 'autocomplete-plus-python-jedi'
 	selector: '.source.python'
-	providerblacklist: null
 
 	inclusionPriority: 10
 	excludeLowerPriority: true
@@ -28,11 +26,6 @@ class JediProvider
 			@rl.close()
 
 	constructor: ->
-		@providerblacklist =
-			'autocomplete-plus-fuzzyprovider': '.source.python'
-			'autocomplete-plus-symbolprovider': '.source.python'
-			'autocomplete-plus-jedi': '.source.python'
-
 		projectPath = atom.project.getPath()
 		command = "python"
 		@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
