@@ -1,3 +1,6 @@
+## 0.2.5
+* Fix deprecations
+
 ## 0.2.4
 * Add type indicators
 * Some smaller fixes

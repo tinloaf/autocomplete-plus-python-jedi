@@ -1,4 +1,4 @@
-{$} = require 'atom'
+$ = require 'jquery'
 
 spawn = require('child_process').spawn
 readline = require('readline')
@@ -26,7 +26,9 @@ class JediProvider
 			@rl.close()
 
 	constructor: ->
-		projectPath = atom.project.getPath()
+		# TODO what if there are multiple paths?
+		projectPath = atom.project.getPaths()[0]
+
 		command = "python"
 		@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
 

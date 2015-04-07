@@ -1,5 +1,5 @@
 {CompositeDisposable} = require 'atom'
-{$} = require 'atom'
+$ = require 'jquery'
 
 spawn = require('child_process').spawn
 JediProvider = require('./jedi-provider')

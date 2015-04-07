@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "atom-package-dependencies": "latest",
-    "atom-message-panel": "latest"
+    "atom-message-panel": "latest",
+    "jquery": "^2"
   },
   "package-dependencies": {},
   "providedServices": {
