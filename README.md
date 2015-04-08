@@ -2,6 +2,8 @@
 
 This is a provider for the awesome [Autocomplete Plus](https://atom.io/packages/autocomplete-plus) making it ready for Python code.
 
+[![Flattr Button](http://api.flattr.com/button/button-static-50x60.png "Flattr This!")](https://flattr.com/submit/auto?user_id=tinloaf&url=https%3A%2F%2Fgithub.com%2Ftinloaf%2Fautocomplete-plus-python-jedi "ACP-Python-Jedi")
+
 ## Features
 
 * Autocompletion from Jedi
