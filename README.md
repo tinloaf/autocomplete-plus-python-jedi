@@ -34,4 +34,4 @@ This package was inspired by a very similar package by [fallenhitokiri](https://
 2015-03-30 	v. 0.1.0
 * Initial version. Autocompletion working.
 
-.. _Jedi : https://github.com/davidhalter/jedi/
+.. _jedi : https://github.com/davidhalter/jedi/
