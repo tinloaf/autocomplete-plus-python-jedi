@@ -4,7 +4,7 @@ This is a provider for the awesome [Autocomplete Plus](https://atom.io/packages/
 
 ## Features
 
-* Autocompletion from Jedi_
+* Autocompletion from Jedi[1]
 * Suggestions include functions' methods (optionally) - just tab through them!
 * Comes with bundled Jedi - no need for jedi in your pythonpath
 
@@ -35,4 +35,4 @@ This package was inspired by a very similar package by [fallenhitokiri](https://
 * Initial version. Autocompletion working.
 
 `
-.. _Jedi : https://github.com/davidhalter/jedi/
+[1] https://github.com/davidhalter/jedi/
