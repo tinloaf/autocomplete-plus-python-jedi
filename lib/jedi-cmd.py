@@ -28,6 +28,9 @@ class JediCmdline(object):
 			param_defs = completion.params
 		except AttributeError:
 			return []
+		except:
+			# TODO Propagate!
+			return []
 
 		params = []
 		for param_def in param_defs:
@@ -41,20 +44,25 @@ class JediCmdline(object):
 	def _process_line(self, line):
 		data =  json.loads(line)
 		script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
-		completions = script.completions()
 
 		retData = []
-		for completion in completions:
-			params = self._get_params(completion)
+		try:
+			completions = script.completions()
 
-			retData.append({
-				'name': completion.name,
-				'complete': completion.complete,
-				'description': completion.description,
-				'type': completion.type,
-				'params': params,
-				'docstring': completion.docstring()
-			})
+			for completion in completions:
+				params = self._get_params(completion)
+
+				retData.append({
+					'name': completion.name,
+					'complete': completion.complete,
+					'description': completion.description,
+					'type': completion.type,
+					'params': params,
+					'docstring': completion.docstring()
+				})
+		except:
+			# TODO Error handling!
+			pass
 
 		self._write_response(retData, data)
 
