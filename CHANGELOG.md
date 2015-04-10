@@ -1,3 +1,6 @@
+## 0.2.6
+* Catch all exceptions thrown by Jedi
+
 ## 0.2.5
 * Fix deprecations
 
