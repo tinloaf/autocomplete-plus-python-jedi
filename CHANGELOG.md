@@ -1,3 +1,7 @@
+## 0.2.7
+* Actually bundle Jedi
+* Don't complete comments and strings
+
 ## 0.2.6
 * Catch all exceptions thrown by Jedi
 
