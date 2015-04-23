@@ -1,0 +1,3 @@
+[submodule "external/jedi"]
+	path = external/jedi
+	url = git@github.com:davidhalter/jedi.git
