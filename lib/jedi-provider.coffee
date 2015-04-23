@@ -127,9 +127,19 @@ class JediProvider
 
 		resolve(suggestions)
 
+	isInString: (scopeDescriptor) ->
+		scopeArray = scopeDescriptor.getScopesArray()
+		(return true if scope.indexOf('string.') == 0) for scope in scopeArray
+		(return true if scope.indexOf('comment.') == 0) for scope in scopeArray
+		return false
+
 	getSuggestions: ({editor, bufferPosition, scopeDescriptor, prefix}) ->
 		if not @isSetUp
 			@setUp()
+
+		if @isInString(scopeDescriptor)
+			return new Promise (resolve, reject) =>
+				resolve([])
 
 		if @halted
 			return new Promise (resolve, reject) =>
