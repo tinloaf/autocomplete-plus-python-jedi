@@ -29,21 +29,25 @@ class JediProvider
 		# TODO what if there are multiple paths?
 		projectPath = atom.project.getPaths()[0]
 		configFile = atom.config.get "autocomplete-plus-python-jedi.directoryConfigFile"
-		{ virtualenv } = CSON.readFileSync "#{projectPath}/#{configFile}"
-		command = "#{virtualenv.root}/bin/#{virtualenv.python_executable}"
-		@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
+		CSON.readFile "#{projectPath}/#{configFile}", (err, data) =>
+			if (not data?) or err?
+				command = "python"
+			else
+				{ virtualenv } = data
+				command = "#{virtualenv.root}/bin/#{virtualenv.python_executable}"
 
-		@proc.on('error', (err) => @handleProcessError())
-		@proc.on('exit', (code, signal) => @handleProcessError())
+			@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
+			@proc.on('error', (err) => @handleProcessError())
+			@proc.on('exit', (code, signal) => @handleProcessError())
 
-		@halted = false
-		@isSetUp = false
-		@reqCount = 0
-		@cbs = {}
+			@halted = false
+			@isSetUp = false
+			@reqCount = 0
+			@cbs = {}
 
-		@proc.stderr.on('data', (data) ->
-  		console.log('Jedi.py Error: ' + data);
-		)
+			@proc.stderr.on('data', (data) ->
+				console.log('Jedi.py Error: ' + data)
+			)
 
 	setUp: ->
 		@rl = readline.createInterface({
