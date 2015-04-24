@@ -31,6 +31,11 @@ module.exports =
       default: true
       title: "Complete Arguments for Functions"
       description: "This will cause the suggestions for functions to include their arguments."
+    directoryConfigFile:
+      type: 'string'
+      default: '.acp-python-jedi.cson'
+      title: 'Per-directory Autocomplete-Plus-Python-Jedi Config File'
+      description: "File containing information about the virtualenv to use for a given directory."
 
   provider: null
 

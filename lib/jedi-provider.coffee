@@ -1,5 +1,5 @@
 $ = require 'jquery'
-
+CSON = require 'season'
 spawn = require('child_process').spawn
 readline = require('readline')
 
@@ -28,8 +28,9 @@ class JediProvider
 	constructor: ->
 		# TODO what if there are multiple paths?
 		projectPath = atom.project.getPaths()[0]
-
-		command = "python"
+		configFile = atom.config.get "autocomplete-plus-python-jedi.directoryConfigFile"
+		{ virtualenv } = CSON.readFileSync "#{projectPath}/#{configFile}"
+		command = "#{virtualenv.root}/bin/#{virtualenv.python_executable}"
 		@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
 
 		@proc.on('error', (err) => @handleProcessError())
