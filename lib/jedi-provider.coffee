@@ -27,9 +27,12 @@ class JediProvider
 
 	constructor: ->
 		projectPaths = atom.project.getPaths()
+		extraPaths = atom.config.get('autocomplete-plus-python-jedi.extraPaths')
+		extraPaths = (p for p in extraPaths.split(',') when p)
+		paths = projectPaths.concat(extraPaths)
 
 		command = "python"
-		@proc = spawn(command, [ __dirname + '/jedi-cmd.py'].concat(projectPaths))
+		@proc = spawn(command, [ __dirname + '/jedi-cmd.py'].concat(paths))
 
 		@proc.on('error', (err) => @handleProcessError())
 		@proc.on('exit', (code, signal) => @handleProcessError())
