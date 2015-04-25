@@ -80,8 +80,6 @@ class JediCmdline(object):
           'type': completion.type,
           'params': params,
           'docstring': completion.docstring(),
-          '_data': data,
-          '_path': sys.path,
         })
     except:
       # TODO Error handling!
