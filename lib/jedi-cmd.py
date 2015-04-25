@@ -1,7 +1,6 @@
 import sys
 import json
 import time
-import inspect
 import os
 
 JEDI_IMPORT_FAILED = False
@@ -10,9 +9,7 @@ try:
   import jedi
 except ImportError:
   # Use the bundled jedi
-  my_file = inspect.stack()[0][1]
-  my_path = os.path.dirname(os.path.abspath(my_file))
-  sys.path.append(my_path + '/python_packages')
+  sys.path.append(os.path.join(os.path.dirname(__file__), 'python_packages'))
   try:
     import jedi
   except ImportError:
