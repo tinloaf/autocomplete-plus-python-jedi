@@ -85,6 +85,8 @@ class JediProvider
 
 		suggestions = []
 		for suggestionData in data['suggestions']
+			if prefix == '.'
+				prefix = ''
 			wholeText = prefix + suggestionData['complete']
 
 			# TODO watch this
