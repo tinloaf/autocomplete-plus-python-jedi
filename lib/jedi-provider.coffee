@@ -26,11 +26,10 @@ class JediProvider
 			@rl.close()
 
 	constructor: ->
-		# TODO what if there are multiple paths?
-		projectPath = atom.project.getPaths()[0]
+		projectPaths = atom.project.getPaths()
 
 		command = "python"
-		@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
+		@proc = spawn(command, [ __dirname + '/jedi-cmd.py'].concat(projectPaths))
 
 		@proc.on('error', (err) => @handleProcessError())
 		@proc.on('exit', (code, signal) => @handleProcessError())
@@ -149,6 +148,7 @@ class JediProvider
 		payload =
 			reqId: reqId
 			prefix: prefix
+			path: editor.getPath()
 			source: editor.getText()
 			line: bufferPosition.row
 			column: bufferPosition.column
