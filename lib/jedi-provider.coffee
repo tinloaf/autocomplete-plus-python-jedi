@@ -26,11 +26,13 @@ class JediProvider
 			@rl.close()
 
 	constructor: ->
-		# TODO what if there are multiple paths?
-		projectPath = atom.project.getPaths()[0]
+		projectPaths = atom.project.getPaths()
+		extraPaths = atom.config.get('autocomplete-plus-python-jedi.extraPaths')
+		extraPaths = (p for p in extraPaths.split(',') when p)
+		paths = projectPaths.concat(extraPaths)
 
 		command = "python"
-		@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
+		@proc = spawn(command, [ __dirname + '/jedi-cmd.py'].concat(paths))
 
 		@proc.on('error', (err) => @handleProcessError())
 		@proc.on('exit', (code, signal) => @handleProcessError())
@@ -83,6 +85,8 @@ class JediProvider
 
 		suggestions = []
 		for suggestionData in data['suggestions']
+			if prefix == '.'
+				prefix = ''
 			wholeText = prefix + suggestionData['complete']
 
 			# TODO watch this
@@ -149,6 +153,7 @@ class JediProvider
 		payload =
 			reqId: reqId
 			prefix: prefix
+			path: editor.getPath()
 			source: editor.getText()
 			line: bufferPosition.row
 			column: bufferPosition.column
