@@ -121,9 +121,9 @@ class JediProvider
 	processDebug: (data) ->
 		if not atom.config.get('autocomplete-plus-python-jedi.developerMode')
 			return
-			
+
 		if 'stacktrace' in data
-			atom.notifications.addError(data['stacktrace']);
+			atom.notifications.addError(data['stacktrace'], {dismissable: true});
 
 	processData: (dataStr) ->
 		data = JSON.parse(dataStr)
