@@ -70,8 +70,12 @@ class JediCmdline(object):
 					'docstring': completion.docstring()
 				})
 		except:
-			# TODO Error handling!
-			pass
+			retData = {
+				'reqId': 'debug',
+				'debug': True,
+				'level': 'error',
+				'stacktrace': traceback.format_exc()
+			}
 
 		self._write_response(retData, data)
 

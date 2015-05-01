@@ -3,7 +3,7 @@ $ = require 'jquery'
 spawn = require('child_process').spawn
 readline = require('readline')
 fs = require('fs')
-path = require('path')
+pathModule = require('path')
 
 class JediProvider
 	selector: '.source.python'
@@ -38,7 +38,7 @@ class JediProvider
 		ascendedPath = path
 		while (@fileExists(path + '/__init__.py'))
 			oldPath = ascendedPath
-			ascendedPath = path.dirname(ascendedPath)
+			ascendedPath = pathModule.dirname(ascendedPath)
 			if (ascendedPath == oldPath)
 				# Reached /
 				return ascendedPath
@@ -47,7 +47,9 @@ class JediProvider
 
 	collectPathsFor: (editor) ->
 		projectPaths = atom.project.getPaths()
-		ascendedModulePath = @ascendModulesPath(path.dirname(editor.getPath()))
+		filePath = editor.getPath()
+		filePath = pathModule.dirname(filePath)
+		ascendedModulePath = @ascendModulesPath(filePath)
 
 		return (projectPaths.concat([ ascendedModulePath ])).sort()
 
@@ -116,6 +118,13 @@ class JediProvider
 			when "jedi-missing" then @showSimpleError("We could not find the jedi package in your python environment. Please make sure that you activated any virtual environment that you wanted to work in. Also make sure that you installed jedi. You can do so via a simple 'pip install jedi' command.", "Jedi not found")
 			else ""
 
+	processDebug: (data) ->
+		if not atom.config.get('autocomplete-plus-python-jedi.developerMode')
+			return
+			
+		if 'stacktrace' in data
+			atom.notifications.addError(data['stacktrace']);
+
 	processData: (dataStr) ->
 		data = JSON.parse(dataStr)
 		if not data['reqId'] in @cbs
@@ -127,11 +136,17 @@ class JediProvider
 			@processMsg(data)
 			return
 
+		if reqId == "debug"
+			@processDebug(data)
+			return
+
 		prefix = data['prefix']
 		[resolve, reject] = @cbs[reqId]
 
 		suggestions = []
 		for suggestionData in data['suggestions']
+			if prefix == '.'
+				prefix = ''
 			wholeText = prefix + suggestionData['complete']
 
 			# TODO watch this
