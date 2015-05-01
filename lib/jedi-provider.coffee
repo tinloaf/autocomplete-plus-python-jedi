@@ -2,6 +2,8 @@ $ = require 'jquery'
 
 spawn = require('child_process').spawn
 readline = require('readline')
+fs = require('fs')
+path = require('path')
 
 class JediProvider
 	selector: '.source.python'
@@ -19,39 +21,89 @@ class JediProvider
 			when "keyword" then "keyword"
 			else ""
 
-	handleProcessError: ->
-		console.log "Jedi Process erroring out"
+	handleProcessError: (identifier, err) ->
+		console.log "Jedi Process " + identifier + " erroring out"
 		@halted = true
-		if @rl?
-			@rl.close()
+		if identifier in @rls and @rls[identifier]?
+			@rls[identifier].close()
 
-	constructor: ->
-		# TODO what if there are multiple paths?
-		projectPath = atom.project.getPaths()[0]
+	fileExists: (path) ->
+		try
+			stats = fs.lstatSync(path);
+			return stats.isFile();
+		catch e
+			return false
 
-		command = "python"
-		@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
+	ascendModulesPath: (path) ->
+		ascendedPath = path
+		while (@fileExists(path + '/__init__.py'))
+			oldPath = ascendedPath
+			ascendedPath = path.dirname(ascendedPath)
+			if (ascendedPath == oldPath)
+				# Reached /
+				return ascendedPath
 
-		@proc.on('error', (err) => @handleProcessError())
-		@proc.on('exit', (code, signal) => @handleProcessError())
+		return ascendedPath
 
-		@halted = false
-		@isSetUp = false
-		@reqCount = 0
-		@cbs = {}
+	collectPathsFor: (editor) ->
+		projectPaths = atom.project.getPaths()
+		ascendedModulePath = @ascendModulesPath(path.dirname(editor.getPath()))
 
-		@proc.stderr.on('data', (data) ->
-  		console.log('Jedi.py Error: ' + data);
+		return (projectPaths.concat([ ascendedModulePath ])).sort()
+
+	getPathsIdentifier: (editor) ->
+		paths = @collectPathsFor(editor)
+		return paths.join(':')
+
+	sendPathToJedi: (proc, path) ->
+		cmd =
+			cmd: 'add_python_path'
+			path: path
+		cmdStr = JSON.stringify cmd
+		cmdStr += '\n'
+
+		proc.stdin.write cmdStr
+
+	createJediFor: (editor, identifier) ->
+		paths = @collectPathsFor(editor)
+
+		proc = spawn("python", [ __dirname + '/jedi-cmd.py' ])
+
+		proc.on('error', (err) => @handleProcessError(identifier, err))
+		proc.on('exit', (code, signal) => @handleProcessError(identifier, code))
+
+		rl = readline.createInterface({
+			input: proc.stdout
+		})
+		rl.on('line', (dataStr) => @processData(dataStr))
+		rl.on('close', => @handleProcessError(identifier))
+
+		proc.stderr.on('data', (data) =>
+  		console.log('Jedi.py ' + identifier + ' Error: ' + data);
 		)
 
-	setUp: ->
-		@rl = readline.createInterface({
-			input: @proc.stdout
-			})
-		@rl.on('line', (dataStr) => @processData(dataStr))
-		@rl.on('close', -> @handleProcessError)
+		@procs[identifier] = proc
+		@rls[identifier] = rl
 
-		@isSetUp = true
+		@sendPathToJedi(proc, path) for path in paths
+
+		console.log "Created Jedi for identifier " + identifier
+		return proc
+
+	getJediFor: (editor) ->
+		identifier = @getPathsIdentifier(editor)
+		if identifier in @procs
+			return @procs[identifier]
+
+		return @createJediFor(editor, identifier)
+
+
+	constructor: ->
+		@procs = {}
+		@rls = {}
+
+		@reqCount = 0
+		@cbs = {}
 
 	showSimpleError: (message, title) ->
 		atom.confirm
@@ -63,9 +115,6 @@ class JediProvider
 		switch data['msg']
 			when "jedi-missing" then @showSimpleError("We could not find the jedi package in your python environment. Please make sure that you activated any virtual environment that you wanted to work in. Also make sure that you installed jedi. You can do so via a simple 'pip install jedi' command.", "Jedi not found")
 			else ""
-
-		if data['halt']
-			@halted = true
 
 	processData: (dataStr) ->
 		data = JSON.parse(dataStr)
@@ -134,16 +183,11 @@ class JediProvider
 		return false
 
 	getSuggestions: ({editor, bufferPosition, scopeDescriptor, prefix}) ->
-		if not @isSetUp
-			@setUp()
+		proc = @getJediFor(editor)
 
 		if @isInString(scopeDescriptor)
 			return new Promise (resolve, reject) =>
 				resolve([])
-
-		if @halted
-			return new Promise (resolve, reject) =>
-				reject()
 
 		reqId = @reqCount++
 		payload =
@@ -158,7 +202,7 @@ class JediProvider
 
 		argStr = JSON.stringify payload
 		argStr += "\n"
-		@proc.stdin.write(argStr)
+		proc.stdin.write(argStr)
 		return prom
 
 module.exports = JediProvider

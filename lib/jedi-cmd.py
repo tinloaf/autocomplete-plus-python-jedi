@@ -41,8 +41,17 @@ class JediCmdline(object):
 
 		return params
 
+	def _process_command(self, data):
+		if data['cmd'] == 'add_python_path':
+			sys.path.append(data['path'])
+
 	def _process_line(self, line):
 		data =  json.loads(line)
+
+		if 'cmd' in data:
+			self._process_command(data)
+			return
+
 		script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
 
 		retData = []
@@ -96,8 +105,5 @@ class JediCmdline(object):
 		self._watch()
 
 if __name__ == '__main__':
-	project_path = sys.argv[1]
-	sys.path.append(project_path)
-
 	cmdline = JediCmdline(sys.stdin, sys.stdout)
 	cmdline.run()
