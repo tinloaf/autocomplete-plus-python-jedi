@@ -36,7 +36,7 @@ class JediProvider
 
 	ascendModulesPath: (path) ->
 		ascendedPath = path
-		while (@fileExists(path + '/__init__.py'))
+		while (@fileExists(ascendedPath + '/__init__.py'))
 			oldPath = ascendedPath
 			ascendedPath = pathModule.dirname(ascendedPath)
 			if (ascendedPath == oldPath)
