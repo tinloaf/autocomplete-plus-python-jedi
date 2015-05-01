@@ -52,12 +52,12 @@ class JediCmdline(object):
 			self._process_command(data)
 			return
 
-		script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
-
-		retData = []
 		try:
-			completions = script.completions()
+			script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
 
+			retData = []
+
+			completions = script.completions()
 			for completion in completions:
 				params = self._get_params(completion)
 

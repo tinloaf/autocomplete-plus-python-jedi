@@ -23,7 +23,8 @@ class JediProvider
 
 	handleProcessError: (identifier, err) ->
 		console.log "Jedi Process " + identifier + " erroring out"
-		@halted = true
+		console.log "Error was: " + err
+
 		if identifier in @rls and @rls[identifier]?
 			@rls[identifier].close()
 
@@ -78,7 +79,7 @@ class JediProvider
 			input: proc.stdout
 		})
 		rl.on('line', (dataStr) => @processData(dataStr))
-		rl.on('close', => @handleProcessError(identifier))
+		rl.on('close', => @handleProcessError(identifier, "rl closed"))
 
 		proc.stderr.on('data', (data) =>
   		console.log('Jedi.py ' + identifier + ' Error: ' + data);
@@ -90,11 +91,12 @@ class JediProvider
 		@sendPathToJedi(proc, path) for path in paths
 
 		console.log "Created Jedi for identifier " + identifier
+		console.log @procs
 		return proc
 
 	getJediFor: (editor) ->
 		identifier = @getPathsIdentifier(editor)
-		if identifier in @procs
+		if identifier of @procs
 			return @procs[identifier]
 
 		return @createJediFor(editor, identifier)
