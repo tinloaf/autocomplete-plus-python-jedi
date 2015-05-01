@@ -168,7 +168,7 @@ class JediProvider
 					else
 						arg_name = $.trim(param['description'].split('=')[0])
 						arg = $.trim(param['description'].split('=')[1])
-						snippet += arg_name + " = ${" + i + ":" + arg + '}'
+						snippet += arg_name + "=${" + i + ":" + arg + '}'
 
 					i += 1
 
