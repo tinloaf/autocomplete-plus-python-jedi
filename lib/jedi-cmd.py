@@ -43,6 +43,7 @@ class JediCmdline(object):
 
 	def _process_line(self, line):
 		data =  json.loads(line)
+		# TODO path? source_path?
 		script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
 
 		retData = []
