@@ -2,6 +2,8 @@ $ = require 'jquery'
 
 spawn = require('child_process').spawn
 readline = require('readline')
+fs = require('fs')
+pathModule = require('path')
 
 class JediProvider
 	selector: '.source.python'
@@ -19,39 +21,93 @@ class JediProvider
 			when "keyword" then "keyword"
 			else ""
 
-	handleProcessError: ->
-		console.log "Jedi Process erroring out"
-		@halted = true
-		if @rl?
-			@rl.close()
+	handleProcessError: (identifier, err) ->
+		console.log "Jedi Process " + identifier + " erroring out"
+		console.log "Error was: " + err
 
-	constructor: ->
-		# TODO what if there are multiple paths?
-		projectPath = atom.project.getPaths()[0]
+		if identifier in @rls and @rls[identifier]?
+			@rls[identifier].close()
 
-		command = "python"
-		@proc = spawn(command, [ __dirname + '/jedi-cmd.py', projectPath ])
+	fileExists: (path) ->
+		try
+			stats = fs.lstatSync(path);
+			return stats.isFile();
+		catch e
+			return false
 
-		@proc.on('error', (err) => @handleProcessError())
-		@proc.on('exit', (code, signal) => @handleProcessError())
+	ascendModulesPath: (path) ->
+		ascendedPath = path
+		while (@fileExists(ascendedPath + '/__init__.py'))
+			oldPath = ascendedPath
+			ascendedPath = pathModule.dirname(ascendedPath)
+			if (ascendedPath == oldPath)
+				# Reached /
+				return ascendedPath
 
-		@halted = false
-		@isSetUp = false
-		@reqCount = 0
-		@cbs = {}
+		return ascendedPath
 
-		@proc.stderr.on('data', (data) ->
-  		console.log('Jedi.py Error: ' + data);
+	collectPathsFor: (editor) ->
+		projectPaths = atom.project.getPaths()
+		filePath = editor.getPath()
+		filePath = pathModule.dirname(filePath)
+		ascendedModulePath = @ascendModulesPath(filePath)
+
+		return (projectPaths.concat([ ascendedModulePath ])).sort()
+
+	getPathsIdentifier: (editor) ->
+		paths = @collectPathsFor(editor)
+		return paths.join(':')
+
+	sendPathToJedi: (proc, path) ->
+		cmd =
+			cmd: 'add_python_path'
+			path: path
+		cmdStr = JSON.stringify cmd
+		cmdStr += '\n'
+
+		proc.stdin.write cmdStr
+
+	createJediFor: (editor, identifier) ->
+		paths = @collectPathsFor(editor)
+
+		proc = spawn("python", [ __dirname + '/jedi-cmd.py' ])
+
+		proc.on('error', (err) => @handleProcessError(identifier, err))
+		proc.on('exit', (code, signal) => @handleProcessError(identifier, code))
+
+		rl = readline.createInterface({
+			input: proc.stdout
+		})
+		rl.on('line', (dataStr) => @processData(dataStr))
+		rl.on('close', => @handleProcessError(identifier, "rl closed"))
+
+		proc.stderr.on('data', (data) =>
+  		console.log('Jedi.py ' + identifier + ' Error: ' + data);
 		)
 
-	setUp: ->
-		@rl = readline.createInterface({
-			input: @proc.stdout
-			})
-		@rl.on('line', (dataStr) => @processData(dataStr))
-		@rl.on('close', -> @handleProcessError)
+		@procs[identifier] = proc
+		@rls[identifier] = rl
 
-		@isSetUp = true
+		@sendPathToJedi(proc, path) for path in paths
+
+		console.log "Created Jedi for identifier " + identifier
+		console.log @procs
+		return proc
+
+	getJediFor: (editor) ->
+		identifier = @getPathsIdentifier(editor)
+		if identifier of @procs
+			return @procs[identifier]
+
+		return @createJediFor(editor, identifier)
+
+
+	constructor: ->
+		@procs = {}
+		@rls = {}
+
+		@reqCount = 0
+		@cbs = {}
 
 	showSimpleError: (message, title) ->
 		atom.confirm
@@ -64,8 +120,12 @@ class JediProvider
 			when "jedi-missing" then @showSimpleError("We could not find the jedi package in your python environment. Please make sure that you activated any virtual environment that you wanted to work in. Also make sure that you installed jedi. You can do so via a simple 'pip install jedi' command.", "Jedi not found")
 			else ""
 
-		if data['halt']
-			@halted = true
+	processDebug: (data) ->
+		if not atom.config.get('autocomplete-plus-python-jedi.developerMode')
+			return
+
+		if 'stacktrace' in data
+			atom.notifications.addError(data['stacktrace'], {dismissable: true});
 
 	processData: (dataStr) ->
 		data = JSON.parse(dataStr)
@@ -78,11 +138,17 @@ class JediProvider
 			@processMsg(data)
 			return
 
+		if reqId == "debug"
+			@processDebug(data)
+			return
+
 		prefix = data['prefix']
 		[resolve, reject] = @cbs[reqId]
 
 		suggestions = []
 		for suggestionData in data['suggestions']
+			if prefix == '.'
+				prefix = ''
 			wholeText = prefix + suggestionData['complete']
 
 			# TODO watch this
@@ -134,16 +200,11 @@ class JediProvider
 		return false
 
 	getSuggestions: ({editor, bufferPosition, scopeDescriptor, prefix}) ->
-		if not @isSetUp
-			@setUp()
+		proc = @getJediFor(editor)
 
 		if @isInString(scopeDescriptor)
 			return new Promise (resolve, reject) =>
 				resolve([])
-
-		if @halted
-			return new Promise (resolve, reject) =>
-				reject()
 
 		reqId = @reqCount++
 		payload =
@@ -158,7 +219,7 @@ class JediProvider
 
 		argStr = JSON.stringify payload
 		argStr += "\n"
-		@proc.stdin.write(argStr)
+		proc.stdin.write(argStr)
 		return prom
 
 module.exports = JediProvider

@@ -41,15 +41,24 @@ class JediCmdline(object):
 
 		return params
 
+	def _process_command(self, data):
+		if data['cmd'] == 'add_python_path':
+			sys.path.append(data['path'])
+
 	def _process_line(self, line):
 		data =  json.loads(line)
-		# TODO path? source_path?
-		script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
 
-		retData = []
+		if 'cmd' in data:
+			self._process_command(data)
+			return
+
 		try:
-			completions = script.completions()
+			# TODO path? source_path?
+			script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
 
+			retData = []
+
+			completions = script.completions()
 			for completion in completions:
 				params = self._get_params(completion)
 
@@ -62,8 +71,12 @@ class JediCmdline(object):
 					'docstring': completion.docstring()
 				})
 		except:
-			# TODO Error handling!
-			pass
+			retData = {
+				'reqId': 'debug',
+				'debug': True,
+				'level': 'error',
+				'stacktrace': traceback.format_exc()
+			}
 
 		self._write_response(retData, data)
 
@@ -97,8 +110,5 @@ class JediCmdline(object):
 		self._watch()
 
 if __name__ == '__main__':
-	project_path = sys.argv[1]
-	sys.path.append(project_path)
-
 	cmdline = JediCmdline(sys.stdin, sys.stdout)
 	cmdline.run()

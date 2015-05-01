@@ -31,6 +31,11 @@ module.exports =
       default: true
       title: "Complete Arguments for Functions"
       description: "This will cause the suggestions for functions to include their arguments."
+    developerMode:
+      type: 'boolean'
+      default: false
+      title: "Enable Developer Mode for this package"
+      description: "Just don't. And if you do, expect it to produce a lot of (most certainly meaningless) error messages."
 
   provider: null
 
