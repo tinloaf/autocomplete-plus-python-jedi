@@ -1,3 +1,6 @@
+## 0.3.1
+* Fix in case a traceback is generated
+
 ## 0.3.0
 * Initial multi-pythonpath support: Editor tabs for which different PYTHONPATHs would be sane now use different Jedi instances
 * The PYTHONPATH will now include the Atom project folder as well as some best guess to what the true project folder may be
