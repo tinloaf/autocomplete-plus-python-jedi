@@ -121,10 +121,15 @@ class JediProvider
 			else ""
 
 	processDebug: (data) ->
+		console.log "Received Debug message"
+
+		if 'stacktrace' of data
+			console.log data['stacktrace']
+
 		if not atom.config.get('autocomplete-plus-python-jedi.developerMode')
 			return
 
-		if 'stacktrace' in data
+		if 'stacktrace' of data
 			atom.notifications.addError(data['stacktrace'], {dismissable: true});
 
 	processData: (dataStr) ->

@@ -53,6 +53,7 @@ class JediCmdline(object):
 			self._process_command(data)
 			return
 
+		raw=False
 		try:
 			# TODO path? source_path?
 			script = jedi.api.Script(data['source'], data['line'] + 1, data['column'])
@@ -72,6 +73,7 @@ class JediCmdline(object):
 					'docstring': completion.docstring()
 				})
 		except:
+			raw=True
 			retData = {
 				'reqId': 'debug',
 				'debug': True,
@@ -79,13 +81,17 @@ class JediCmdline(object):
 				'stacktrace': traceback.format_exc()
 			}
 
-		self._write_response(retData, data)
+		self._write_response(retData, data, raw=raw)
 
-	def _write_response(self, retData, data):
-		reqId = data['reqId']
-		ret = {'reqId': reqId,
-				'prefix': data['prefix'],
-				'suggestions': retData}
+	def _write_response(self, retData, data, raw=False):
+		if not raw:
+			reqId = data['reqId']
+			ret = {'reqId': reqId,
+					'prefix': data['prefix'],
+					'suggestions': retData}
+		else:
+			ret = retData
+			
 		self.ostream.write(json.dumps(ret) + "\n")
 		self.ostream.flush()
 
