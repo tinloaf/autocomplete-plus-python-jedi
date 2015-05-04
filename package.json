@@ -1,7 +1,7 @@
 {
   "name": "autocomplete-plus-python-jedi",
   "main": "./lib/acp-python-jedi",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A python Autocomplete Plus provider based on Jedi",
   "activationCommands": {},
   "repository": "https://github.com/tinloaf/autocomplete-plus-python-jedi",
