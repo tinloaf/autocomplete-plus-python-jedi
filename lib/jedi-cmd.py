@@ -64,14 +64,19 @@ class JediCmdline(object):
 			for completion in completions:
 				params = self._get_params(completion)
 
-				retData.append({
+				suggestionData = {
 					'name': completion.name,
 					'complete': completion.complete,
 					'description': completion.description,
 					'type': completion.type,
 					'params': params,
-					'docstring': completion.docstring()
-				})
+				}
+
+				# Jedi 0.7 (shipped with ubuntu) does not have this.
+				if hasattr(completion, 'docstring'):
+					suggestionData['docstring'] = completion.docstring()
+
+				retData.append(suggestionData)
 		except:
 			raw=True
 			retData = {
@@ -91,7 +96,7 @@ class JediCmdline(object):
 					'suggestions': retData}
 		else:
 			ret = retData
-			
+
 		self.ostream.write(json.dumps(ret) + "\n")
 		self.ostream.flush()
 
