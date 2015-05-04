@@ -1,3 +1,7 @@
+## 0.3.2
+* Fix crash when used with Jedi 0.7
+* More debbuging fixes
+
 ## 0.3.1
 * Fix in case a traceback is generated
 
