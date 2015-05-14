@@ -1,3 +1,6 @@
+## 0.3.3
+* Jedi update
+
 ## 0.3.2
 * Fix crash when used with Jedi 0.7
 * More debbuging fixes
