@@ -11,4 +11,5 @@ rm lib/external/jedi/.git
 rm lib/external/jedi/.gitignore
 
 git add lib/external/jedi
+git add external/jedi
 git commit -m 'Automatic Commit: Updating bundled Jedi'
