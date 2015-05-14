@@ -10,14 +10,6 @@ Jedi - an awesome autocompletion/static analysis library for Python
     :target: https://coveralls.io/r/davidhalter/jedi
     :alt: Coverage Status
 
-.. image:: https://pypip.in/d/jedi/badge.png
-    :target: https://crate.io/packages/jedi/
-    :alt: Number of PyPI downloads
-
-.. image:: https://pypip.in/v/jedi/badge.png
-    :target: https://crate.io/packages/jedi/
-    :alt: Latest PyPI version
-
 
 *If you have specific questions, please add an issue or ask on* `stackoverflow
 <https://stackoverflow.com>`_ *with the label* ``python-jedi``.
@@ -146,10 +138,9 @@ understand ``AttributeError`` and other code issues.
 Refactoring
 -----------
 
-Jedi would in theory support refactoring, but we have never publicized it,
-because it's not production ready. If you're interested in helping out here,
-let me know. With the latest parser changes, it should be very easy to actually
-make it work.
+Jedi's parser would support refactoring, but there's no API to use it right
+now.  If you're interested in helping out here, let me know. With the latest
+parser changes, it should be very easy to actually make it work.
 
 
 Development

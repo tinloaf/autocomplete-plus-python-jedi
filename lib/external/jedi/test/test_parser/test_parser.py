@@ -15,7 +15,7 @@ def test_user_statement_on_import():
           "    time)")
 
     for pos in [(2, 1), (2, 4)]:
-        p = UserContextParser(load_grammar(), s, None, pos, None).user_stmt()
+        p = UserContextParser(load_grammar(), s, None, pos, None, lambda x: 1).user_stmt()
         assert isinstance(p, pt.Import)
         assert [str(n) for n in p.get_defined_names()] == ['time']
 
@@ -207,3 +207,9 @@ def test_param_splitting():
 def test_unicode_string():
     s = pt.String(None, u('bö'), (0, 0))
     assert repr(s)  # Should not raise an Error!
+
+
+def test_backslash_dos_style():
+    grammar = load_grammar()
+    m = Parser(grammar, u('\\\r\n')).module
+    assert m

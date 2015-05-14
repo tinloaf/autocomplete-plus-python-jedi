@@ -110,6 +110,27 @@ def as_imports():
     #? int()
     bar.a
 
+
+def test_import_priorities():
+    """
+    It's possible to overwrite import paths in an ``__init__.py`` file, by
+    just assigining something there.
+
+    See also #536.
+    """
+    from import_tree import the_pkg, invisible_pkg
+    #? int()
+    invisible_pkg
+    # In real Python, this would be the module, but it's not, because Jedi
+    # doesn't care about most stateful issues such as __dict__, which it would
+    # need to, to do this in a correct way.
+    #? int()
+    the_pkg
+    # Importing foo is still possible, even though inivisible_pkg got changed.
+    #? float()
+    from import_tree.invisible_pkg import foo
+
+
 # -----------------
 # std lib modules
 # -----------------

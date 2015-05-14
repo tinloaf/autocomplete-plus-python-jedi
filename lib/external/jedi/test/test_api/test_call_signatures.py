@@ -209,6 +209,13 @@ class TestCallSignatures(TestCase):
 
         self._run(source, 'test2', 0)
 
+    def test_return(self):
+        source = dedent('''
+        def foo():
+            return '.'.join()''')
+
+        self._run(source, 'join', 0, column=len("    return '.'.join("))
+
 
 class TestParams(TestCase):
     def params(self, source, line=None, column=None):
@@ -229,6 +236,18 @@ class TestParams(TestCase):
         p = self.params('''open(something,''')
         assert p[0].name in ['file', 'name']
         assert p[1].name == 'mode'
+
+    def test_builtins(self):
+        """
+        The self keyword should be visible even for builtins, if not
+        instantiated.
+        """
+        p = self.params('str.endswith(')
+        assert p[0].name == 'self'
+        assert p[1].name == 'suffix'
+        p = self.params('str().endswith(')
+        assert p[0].name == 'suffix'
+
 
 
 def test_signature_is_definition():
