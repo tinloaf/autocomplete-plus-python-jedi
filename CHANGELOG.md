@@ -1,3 +1,6 @@
+## 0.3.4
+* Fix message for atom with bundled ACP
+
 ## 0.3.3
 * Jedi update
 
