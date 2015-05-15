@@ -207,6 +207,14 @@ class JediProvider
 	getSuggestions: ({editor, bufferPosition, scopeDescriptor, prefix}) ->
 		proc = @getJediFor(editor)
 
+		###
+		If the prefix is just ':', we're most likely at the end of an "if foo:" ,
+		and we *don't* want all the :'foo' completions. Is this a jedi bug?
+		###
+		if prefix == ':'
+			return new Promise (resolve, reject) =>
+				resolve([])
+
 		if @isInString(scopeDescriptor)
 			return new Promise (resolve, reject) =>
 				resolve([])

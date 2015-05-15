@@ -1,3 +1,6 @@
+## 0.3.5
+* Fix bug with ':' prefix causing lots of completions
+
 ## 0.3.4
 * Fix message for atom with bundled ACP
 
