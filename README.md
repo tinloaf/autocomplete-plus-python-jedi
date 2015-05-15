@@ -6,7 +6,7 @@ This is a provider for the awesome [Autocomplete Plus](https://atom.io/packages/
 
 ## Features
 
-* Autocompletion from Jedi
+* Autocompletion from [Jedi] (https://github.com/davidhalter/jedi/) 
 * Suggestions include functions' methods (optionally) - just tab through them!
 * Comes with bundled Jedi - no need for jedi in your pythonpath
 
