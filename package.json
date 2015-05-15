@@ -12,7 +12,8 @@
   "dependencies": {
     "atom-package-dependencies": "latest",
     "atom-message-panel": "latest",
-    "jquery": "^2"
+    "jquery": "^2",
+    "semver": "^4.2.0"
   },
   "package-dependencies": {},
   "providedServices": {
