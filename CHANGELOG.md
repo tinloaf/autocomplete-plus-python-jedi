@@ -1,3 +1,6 @@
+## 0.3.6
+* Activate filterSuggestions
+
 ## 0.3.5
 * Fix bug with ':' prefix causing lots of completions
 
