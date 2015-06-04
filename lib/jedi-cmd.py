@@ -13,7 +13,7 @@ except ImportError:
 	# Use the bundled jedi
 	my_file = inspect.stack()[0][1]
 	my_path = os.path.dirname(os.path.abspath(my_file))
-	sys.path.append(my_path + '/python_packages')
+	sys.path.append(my_path + '/external')
 	try:
 		import jedi
 	except ImportError:
@@ -83,7 +83,8 @@ class JediCmdline(object):
 				'reqId': 'debug',
 				'debug': True,
 				'level': 'error',
-				'stacktrace': traceback.format_exc()
+				'stacktrace': traceback.format_exc(),
+				'source': data['source'],
 			}
 
 		self._write_response(retData, data, raw=raw)

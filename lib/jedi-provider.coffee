@@ -11,6 +11,8 @@ class JediProvider
 	inclusionPriority: 10
 	excludeLowerPriority: true
 
+	filterSuggestions: true
+
 	mapClass: (typeName) ->
 		switch typeName
 			when "function" then "function"
@@ -124,7 +126,14 @@ class JediProvider
 		console.log "Received Debug message"
 
 		if 'stacktrace' of data
+			console.log "---- Stacktrace follows ----"
 			console.log data['stacktrace']
+			console.log "---- Stacktrace end ----"
+
+		if 'source' of data
+			console.log "---- Original Source ----"
+			console.log data['source']
+			console.log "---- Source End ----"
 
 		if not atom.config.get('autocomplete-plus-python-jedi.developerMode')
 			return
@@ -232,6 +241,7 @@ class JediProvider
 
 		argStr = JSON.stringify payload
 		argStr += "\n"
+		console.log ("Sent: \n" + argStr)
 		proc.stdin.write(argStr)
 		return prom
 
