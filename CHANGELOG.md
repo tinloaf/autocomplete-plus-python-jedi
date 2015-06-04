@@ -1,3 +1,7 @@
+## 0.3.7
+* Minor bugfixes
+* Update bundled Jedi
+
 ## 0.3.6
 * Activate filterSuggestions
 
