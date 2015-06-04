@@ -6,7 +6,7 @@ git pull
 cd ../../
 
 rm -r lib/external/jedi
-cp -r external/jedi lib/external/jedi
+cp -r external/jedi/jedi lib/external/jedi
 rm lib/external/jedi/.git
 rm lib/external/jedi/.gitignore
 

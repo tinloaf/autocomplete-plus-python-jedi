@@ -241,7 +241,7 @@ class JediProvider
 
 		argStr = JSON.stringify payload
 		argStr += "\n"
-		console.log ("Sent: \n" + argStr)
+
 		proc.stdin.write(argStr)
 		return prom
 
